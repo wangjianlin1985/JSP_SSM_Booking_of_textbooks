@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jxxt.mapper.TTeacherMapper" >
+  <resultMap id="BaseResultMap" type="com.jxxt.entity.TTeacher" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="tea_no" property="teaNo" jdbcType="VARCHAR" />
+    <result column="tea_name" property="teaName" jdbcType="VARCHAR" />
+    <result column="tea_age" property="teaAge" jdbcType="VARCHAR" />
+    <result column="tea_sex" property="teaSex" jdbcType="VARCHAR" />
+    <result column="tea_phone" property="teaPhone" jdbcType="VARCHAR" />
+    <result column="profession_id" property="professionId" jdbcType="INTEGER" />
+    <result column="tea_pwd" property="teaPwd" jdbcType="VARCHAR" />
+     <result column="professionName" property="professionName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, tea_no, tea_name, tea_age, tea_sex, tea_phone, profession_id, tea_pwd
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_teacher
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+    
+ <select id="findPage" resultMap="BaseResultMap" >
+    select 
+   t.*,p.profession_name professionName
+    from t_teacher t
+    
+     LEFT JOIN t_profession p ON p.`id` =  t.`profession_id`
+    <where>
+    1=1
+    	<if test="teaName !=null">
+    		and	t.tea_name like"%"#{teaName}"%"
+    	</if>
+    	<if test="professionId !=null">
+    		and	t.profession_id = #{professionId}
+    	</if>
+    </where>
+    
+  </select>
+  
+      <select id="selectTeaLogin" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_teacher
+    where tea_no = #{tea_no}
+  </select>
+  
+     <select id="selectCount" resultType="java.lang.Integer" >
+    select count(*) from t_teacher
+  </select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_teacher
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jxxt.entity.TTeacher" >
+    insert into t_teacher (id, tea_no, tea_name, 
+      tea_age, tea_sex, tea_phone, 
+      profession_id, tea_pwd)
+    values (#{id,jdbcType=INTEGER}, #{teaNo,jdbcType=VARCHAR}, #{teaName,jdbcType=VARCHAR}, 
+      #{teaAge,jdbcType=VARCHAR}, #{teaSex,jdbcType=VARCHAR}, #{teaPhone,jdbcType=VARCHAR}, 
+      #{professionId,jdbcType=INTEGER}, #{teaPwd,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jxxt.entity.TTeacher" >
+    insert into t_teacher
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+     
+      <if test="teaNo != null" >
+        tea_no,
+      </if>
+      <if test="teaName != null" >
+        tea_name,
+      </if>
+      <if test="teaAge != null" >
+        tea_age,
+      </if>
+      <if test="teaSex != null" >
+        tea_sex,
+      </if>
+      <if test="teaPhone != null" >
+        tea_phone,
+      </if>
+      <if test="professionId != null" >
+        profession_id,
+      </if>
+      <if test="teaPwd != null" >
+        tea_pwd,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      
+      <if test="teaNo != null" >
+        #{teaNo,jdbcType=VARCHAR},
+      </if>
+      <if test="teaName != null" >
+        #{teaName,jdbcType=VARCHAR},
+      </if>
+      <if test="teaAge != null" >
+        #{teaAge,jdbcType=VARCHAR},
+      </if>
+      <if test="teaSex != null" >
+        #{teaSex,jdbcType=VARCHAR},
+      </if>
+      <if test="teaPhone != null" >
+        #{teaPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="professionId != null" >
+        #{professionId,jdbcType=INTEGER},
+      </if>
+      <if test="teaPwd != null" >
+        #{teaPwd,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jxxt.entity.TTeacher" >
+    update t_teacher
+    <set >
+      <if test="teaNo != null" >
+        tea_no = #{teaNo,jdbcType=VARCHAR},
+      </if>
+      <if test="teaName != null" >
+        tea_name = #{teaName,jdbcType=VARCHAR},
+      </if>
+      <if test="teaAge != null" >
+        tea_age = #{teaAge,jdbcType=VARCHAR},
+      </if>
+      <if test="teaSex != null" >
+        tea_sex = #{teaSex,jdbcType=VARCHAR},
+      </if>
+      <if test="teaPhone != null" >
+        tea_phone = #{teaPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="professionId != null" >
+        profession_id = #{professionId,jdbcType=INTEGER},
+      </if>
+      <if test="teaPwd != null" >
+        tea_pwd = #{teaPwd,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jxxt.entity.TTeacher" >
+    update t_teacher
+    set tea_no = #{teaNo,jdbcType=VARCHAR},
+      tea_name = #{teaName,jdbcType=VARCHAR},
+      tea_age = #{teaAge,jdbcType=VARCHAR},
+      tea_sex = #{teaSex,jdbcType=VARCHAR},
+      tea_phone = #{teaPhone,jdbcType=VARCHAR},
+      profession_id = #{professionId,jdbcType=INTEGER},
+      tea_pwd = #{teaPwd,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

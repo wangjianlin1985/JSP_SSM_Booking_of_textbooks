@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jxxt.mapper.TRoomMapper" >
+  <resultMap id="BaseResultMap" type="com.jxxt.entity.TRoom" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="room_name" property="roomName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, room_name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_room
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+     <select id="findPage" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_room
+      <where>
+    	<if test="roomName !=null">
+    		room_name like"%"#{roomName}"%"
+    	</if>
+    </where>
+  </select>
+  
+     <select id="findRoom" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_room
+   
+  </select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_room
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jxxt.entity.TRoom" >
+    insert into t_room (id, room_name)
+    values (#{id,jdbcType=INTEGER}, #{roomName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jxxt.entity.TRoom" >
+    insert into t_room
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+   
+      <if test="roomName != null" >
+        room_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      
+      <if test="roomName != null" >
+        #{roomName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jxxt.entity.TRoom" >
+    update t_room
+    <set >
+      <if test="roomName != null" >
+        room_name = #{roomName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jxxt.entity.TRoom" >
+    update t_room
+    set room_name = #{roomName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jxxt.mapper.TBookMapper" >
+  <resultMap id="BaseResultMap" type="com.jxxt.entity.TBook" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="book" property="book" jdbcType="VARCHAR" />
+    <result column="type_id" property="typeId" jdbcType="INTEGER" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="num" property="num" jdbcType="VARCHAR" />
+     <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    b.id, b.book, b.type_id, b.content, b.num
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_book b
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+    <select id="findPage" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />,t.type_name
+    from t_book b
+    left join t_type t on  t.id= b.type_id
+      <where>
+    	<if test="book !=null">
+    		b.book like"%"#{book}"%"
+    	</if>
+    </where>
+  </select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_book
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jxxt.entity.TBook" >
+    insert into t_book (id, book, type_id, 
+      content, num)
+    values (#{id,jdbcType=INTEGER}, #{book,jdbcType=VARCHAR}, #{typeId,jdbcType=INTEGER}, 
+      #{content,jdbcType=VARCHAR}, #{num,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jxxt.entity.TBook" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    insert into t_book
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+     
+      <if test="book != null" >
+        book,
+      </if>
+      <if test="typeId != null" >
+        type_id,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="num != null" >
+        num,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      
+      <if test="book != null" >
+        #{book,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null" >
+        #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="num != null" >
+        #{num,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jxxt.entity.TBook" >
+    update t_book
+    <set >
+      <if test="book != null" >
+        book = #{book,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null" >
+        type_id = #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="num != null" >
+        num = #{num,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jxxt.entity.TBook" >
+    update t_book
+    set book = #{book,jdbcType=VARCHAR},
+      type_id = #{typeId,jdbcType=INTEGER},
+      content = #{content,jdbcType=VARCHAR},
+      num = #{num,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

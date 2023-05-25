@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jxxt.mapper.TScoreMapper" >
+  <resultMap id="BaseResultMap" type="com.jxxt.entity.TScore" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="score_title" property="scoreTitle" jdbcType="VARCHAR" />
+    <result column="course_id" property="courseId" jdbcType="INTEGER" />
+    <result column="stu_id" property="stuId" jdbcType="INTEGER" />
+    <result column="tea_id" property="teaId" jdbcType="INTEGER" />
+    <result column="score" property="score" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="courseName" property="courseName" jdbcType="VARCHAR" />
+    <result column="teaName" property="teaName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, score_title, course_id, stu_id, tea_id, score, create_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_score
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  
+    <select id="findScore" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    s.*,c.course_name courseName , t.tea_name teaName
+    from t_score s
+    left join t_course c on c.id= s.course_id
+    left join t_teacher t on t.id=s.tea_id
+    where s.stu_id = #{stuId,jdbcType=INTEGER}
+  </select>
+  
+   <select id="validateScore" resultType="java.lang.Integer" parameterType="com.jxxt.entity.TScore" >
+    select 
+    count(*)
+    from t_score
+    where stu_id = #{stuId,jdbcType=INTEGER} and course_id =  #{courseId,jdbcType=INTEGER} 
+  </select>
+  
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_score
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jxxt.entity.TScore" >
+    insert into t_score (id, score_title, course_id, 
+      stu_id, tea_id, score, 
+      create_date)
+    values (#{id,jdbcType=INTEGER}, #{scoreTitle,jdbcType=VARCHAR}, #{courseId,jdbcType=INTEGER}, 
+      #{stuId,jdbcType=INTEGER}, #{teaId,jdbcType=INTEGER}, #{score,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jxxt.entity.TScore" >
+    insert into t_score
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+    
+      <if test="scoreTitle != null" >
+        score_title,
+      </if>
+      <if test="courseId != null" >
+        course_id,
+      </if>
+      <if test="stuId != null" >
+        stu_id,
+      </if>
+      <if test="teaId != null" >
+        tea_id,
+      </if>
+      <if test="score != null" >
+        score,
+      </if>
+   
+        create_date
+     
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+     
+      <if test="scoreTitle != null" >
+        #{scoreTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="courseId != null" >
+        #{courseId,jdbcType=INTEGER},
+      </if>
+      <if test="stuId != null" >
+        #{stuId,jdbcType=INTEGER},
+      </if>
+      <if test="teaId != null" >
+        #{teaId,jdbcType=INTEGER},
+      </if>
+      <if test="score != null" >
+        #{score,jdbcType=VARCHAR},
+      </if>
+     sysdate()
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jxxt.entity.TScore" >
+    update t_score
+    <set >
+      <if test="scoreTitle != null" >
+        score_title = #{scoreTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="courseId != null" >
+        course_id = #{courseId,jdbcType=INTEGER},
+      </if>
+      <if test="stuId != null" >
+        stu_id = #{stuId,jdbcType=INTEGER},
+      </if>
+      <if test="teaId != null" >
+        tea_id = #{teaId,jdbcType=INTEGER},
+      </if>
+      <if test="score != null" >
+        score = #{score,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jxxt.entity.TScore" >
+    update t_score
+    set score_title = #{scoreTitle,jdbcType=VARCHAR},
+      course_id = #{courseId,jdbcType=INTEGER},
+      stu_id = #{stuId,jdbcType=INTEGER},
+      tea_id = #{teaId,jdbcType=INTEGER},
+      score = #{score,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

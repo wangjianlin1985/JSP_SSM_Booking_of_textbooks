@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jxxt.mapper.TProfessionMapper" >
+  <resultMap id="BaseResultMap" type="com.jxxt.entity.TProfession" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="profession_name" property="professionName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, profession_name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_profession
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+     <select id="findPage" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_profession
+      <where>
+    	<if test="professionName !=null">
+    		profession_name like"%"#{professionName}"%"
+    	</if>
+    </where>
+    
+  </select>
+  
+  
+       <select id="findProfession" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_profession
+   
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_profession
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jxxt.entity.TProfession" >
+    insert into t_profession (id, profession_name)
+    values (#{id,jdbcType=INTEGER}, #{professionName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jxxt.entity.TProfession" >
+    insert into t_profession
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      
+      <if test="professionName != null" >
+        profession_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+     
+      <if test="professionName != null" >
+        #{professionName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jxxt.entity.TProfession" >
+    update t_profession
+    <set >
+      <if test="professionName != null" >
+        profession_name = #{professionName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jxxt.entity.TProfession" >
+    update t_profession
+    set profession_name = #{professionName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jxxt.mapper.TInventoryMapper" >
+  <resultMap id="BaseResultMap" type="com.jxxt.entity.TInventory" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="book_id" property="bookId" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="num" property="num" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="rol_id" property="rolId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+     <result column="book" property="book" jdbcType="VARCHAR" />
+     <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+     <result column="invent" property="invent" jdbcType="VARCHAR" />
+     
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, book_id, status, num, user_id, rol_id, create_time,invent
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_inventory
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  
+  
+      <select id="findPage" resultMap="BaseResultMap" >
+      SELECT i.*,b.book,t.`type_name` FROM t_inventory i 
+		LEFT JOIN t_book b ON i.`book_id`=b.`id`
+		LEFT JOIN t_type t ON t.`id` = b.`type_id`
+	 <where>
+    	<if test="book !=null">
+    		b.book like concat('%',#{book},'%')
+    	</if>
+    </where>
+   
+  </select>
+  
+   <select id="outNum" resultType="java.lang.Integer" >
+      SELECT COUNT(*) outNum FROM t_inventory i WHERE i.`status`='出库'
+  </select>
+     <select id="outHe" resultType="java.lang.Integer">
+      SELECT IFNULL(SUM(i.`num`),0) outHe FROM t_inventory i WHERE i.`status`='出库'
+  </select>
+  <select id="inNum" resultType="java.lang.Integer" >
+     SELECT COUNT(*) inNum FROM t_inventory i WHERE i.`status`='入库'
+  </select>
+  <select id="inHe" resultType="java.lang.Integer" >
+     SELECT IFNULL(SUM(i.`num`),0) inHe  FROM t_inventory i WHERE i.`status`='入库'
+  </select>
+
+  
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_inventory
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jxxt.entity.TInventory" >
+    insert into t_inventory (id, book_id, status, 
+      num, user_id, rol_id, 
+      create_time)
+    values (#{id,jdbcType=INTEGER}, #{bookId,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR}, 
+      #{num,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{rolId,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jxxt.entity.TInventory" >
+    insert into t_inventory
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+     
+      <if test="bookId != null" >
+        book_id,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="num != null" >
+        num,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="rolId != null" >
+        rol_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+       <if test="invent != null" >
+        invent,
+      </if>
+      
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+     
+      <if test="bookId != null" >
+        #{bookId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="num != null" >
+        #{num,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="rolId != null" >
+        #{rolId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="invent != null" >
+        #{invent,jdbcType=VARCHAR},
+      </if>
+      
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jxxt.entity.TInventory" >
+    update t_inventory
+    <set >
+      <if test="bookId != null" >
+        book_id = #{bookId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="num != null" >
+        num = #{num,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="rolId != null" >
+        rol_id = #{rolId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+       <if test="invent != null" >
+        invent = #{invent,jdbcType=VARCHAR},
+      </if>
+      
+      
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jxxt.entity.TInventory" >
+    update t_inventory
+    set book_id = #{bookId,jdbcType=INTEGER},
+      status = #{status,jdbcType=VARCHAR},
+      num = #{num,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=INTEGER},
+      rol_id = #{rolId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

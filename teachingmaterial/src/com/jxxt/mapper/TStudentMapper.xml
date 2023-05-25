@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jxxt.mapper.TStudentMapper" >
+  <resultMap id="BaseResultMap" type="com.jxxt.entity.TStudent" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="stu_no" property="stuNo" jdbcType="VARCHAR" />
+    <result column="stu_name" property="stuName" jdbcType="VARCHAR" />
+    <result column="stu_age" property="stuAge" jdbcType="VARCHAR" />
+    <result column="stu_sex" property="stuSex" jdbcType="VARCHAR" />
+    <result column="serie_id" property="serieId" jdbcType="INTEGER" />
+    <result column="profession_id" property="professionId" jdbcType="INTEGER" />
+    <result column="class_id" property="classId" jdbcType="INTEGER" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="enter_school" property="enterSchool" jdbcType="DATE" />
+    <result column="term_id" property="termId" jdbcType="INTEGER" />
+    <result column="stu_pwd" property="stuPwd" jdbcType="VARCHAR" />
+     <result column="className" property="className" jdbcType="VARCHAR" />
+     <result column="professionName" property="professionName" jdbcType="VARCHAR" />
+      <result column="serieName" property="serieName" jdbcType="VARCHAR" />
+       <result column="termName" property="termName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, stu_no, stu_name, stu_age, stu_sex, serie_id, profession_id, class_id, phone, 
+    enter_school, term_id, stu_pwd
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_student
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+ <select id="findPage" resultMap="BaseResultMap" >
+   SELECT 
+   s.*,c.`class_name` className ,e.`serie_name` serieName,p.`profession_name` professionName ,t.`term_name` termName
+    FROM t_student s
+    LEFT JOIN t_class c ON s.`class_id` = c.`id`
+    LEFT JOIN t_serie e ON e.`id` = s.`serie_id`
+    LEFT JOIN t_profession p ON p.`id` = s.`profession_id`
+    LEFT JOIN t_term t ON t.`id` = s.`term_id`
+       <where>
+       1=1
+       	<if test="stuName !=null">
+    	and	s.stu_name like"%"#{stuName}"%"
+    	</if>
+    	<if test="termId !=null">
+    	
+    	and	s.term_id = #{termId}
+    	</if>
+    
+    	<if test="serieId !=null">
+    	and	s.serie_id = #{serieId}
+    	</if>
+    	<if test="professionId !=null">
+    	and	s.profession_id = #{professionId}
+    	</if>
+    	<if test="classId !=null">
+    	and	s.class_id = #{classId}
+    	</if>
+    	
+    </where>
+    
+  </select>
+  
+    <select id="selectStuLogin" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_student
+    where stu_no = #{stu_no}
+  </select>
+  
+   <select id="selectCount" resultType="java.lang.Integer" >
+    select count(*) from t_student
+  </select>
+  
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_student
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jxxt.entity.TStudent" >
+    insert into t_student (id, stu_no, stu_name, 
+      stu_age, stu_sex, serie_id, 
+      profession_id, class_id, phone, 
+      enter_school, term_id, stu_pwd
+      )
+    values (#{id,jdbcType=INTEGER}, #{stuNo,jdbcType=VARCHAR}, #{stuName,jdbcType=VARCHAR}, 
+      #{stuAge,jdbcType=VARCHAR}, #{stuSex,jdbcType=VARCHAR}, #{serieId,jdbcType=INTEGER}, 
+      #{professionId,jdbcType=INTEGER}, #{classId,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, 
+      #{enterSchool,jdbcType=DATE}, #{termId,jdbcType=INTEGER}, #{stuPwd,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jxxt.entity.TStudent" >
+    insert into t_student
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+    
+      <if test="stuNo != null" >
+        stu_no,
+      </if>
+      <if test="stuName != null" >
+        stu_name,
+      </if>
+      <if test="stuAge != null" >
+        stu_age,
+      </if>
+      <if test="stuSex != null" >
+        stu_sex,
+      </if>
+      <if test="serieId != null" >
+        serie_id,
+      </if>
+      <if test="professionId != null" >
+        profession_id,
+      </if>
+      <if test="classId != null" >
+        class_id,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+     
+      <if test="termId != null" >
+        term_id,
+      </if>
+      <if test="stuPwd != null" >
+        stu_pwd,
+      </if>
+   
+        enter_school
+     
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+     
+      <if test="stuNo != null" >
+        #{stuNo,jdbcType=VARCHAR},
+      </if>
+      <if test="stuName != null" >
+        #{stuName,jdbcType=VARCHAR},
+      </if>
+      <if test="stuAge != null" >
+        #{stuAge,jdbcType=VARCHAR},
+      </if>
+      <if test="stuSex != null" >
+        #{stuSex,jdbcType=VARCHAR},
+      </if>
+      <if test="serieId != null" >
+        #{serieId,jdbcType=INTEGER},
+      </if>
+      <if test="professionId != null" >
+        #{professionId,jdbcType=INTEGER},
+      </if>
+      <if test="classId != null" >
+        #{classId,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+     
+      <if test="termId != null" >
+        #{termId,jdbcType=INTEGER},
+      </if>
+      <if test="stuPwd != null" >
+        #{stuPwd,jdbcType=VARCHAR},
+      </if>
+      sysdate()
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jxxt.entity.TStudent" >
+    update t_student
+    <set >
+      <if test="stuNo != null" >
+        stu_no = #{stuNo,jdbcType=VARCHAR},
+      </if>
+      <if test="stuName != null" >
+        stu_name = #{stuName,jdbcType=VARCHAR},
+      </if>
+      <if test="stuAge != null" >
+        stu_age = #{stuAge,jdbcType=VARCHAR},
+      </if>
+      <if test="stuSex != null" >
+        stu_sex = #{stuSex,jdbcType=VARCHAR},
+      </if>
+      <if test="serieId != null" >
+        serie_id = #{serieId,jdbcType=INTEGER},
+      </if>
+      <if test="professionId != null" >
+        profession_id = #{professionId,jdbcType=INTEGER},
+      </if>
+      <if test="classId != null" >
+        class_id = #{classId,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="enterSchool != null" >
+        enter_school = #{enterSchool,jdbcType=DATE},
+      </if>
+      <if test="termId != null" >
+        term_id = #{termId,jdbcType=INTEGER},
+      </if>
+      <if test="stuPwd != null" >
+        stu_pwd = #{stuPwd,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jxxt.entity.TStudent" >
+    update t_student
+    set stu_no = #{stuNo,jdbcType=VARCHAR},
+      stu_name = #{stuName,jdbcType=VARCHAR},
+      stu_age = #{stuAge,jdbcType=VARCHAR},
+      stu_sex = #{stuSex,jdbcType=VARCHAR},
+      serie_id = #{serieId,jdbcType=INTEGER},
+      profession_id = #{professionId,jdbcType=INTEGER},
+      class_id = #{classId,jdbcType=INTEGER},
+      phone = #{phone,jdbcType=VARCHAR},
+      enter_school = #{enterSchool,jdbcType=DATE},
+      term_id = #{termId,jdbcType=INTEGER},
+      stu_pwd = #{stuPwd,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

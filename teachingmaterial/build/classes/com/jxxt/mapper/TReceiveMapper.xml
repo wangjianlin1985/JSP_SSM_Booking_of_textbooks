@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jxxt.mapper.TReceiveMapper" >
+  <resultMap id="BaseResultMap" type="com.jxxt.entity.TReceive" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="rol_id" property="rolId" jdbcType="INTEGER" />
+    <result column="book_id" property="bookId" jdbcType="INTEGER" />
+    <result column="amount" property="amount" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+     <result column="content" property="content" jdbcType="VARCHAR" />
+     <result column="book" property="book" jdbcType="VARCHAR" />
+     <result column="stu_name" property="stuName" jdbcType="VARCHAR" />
+      <result column="username" property="username" jdbcType="VARCHAR" />
+      
+          <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+  
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, rol_id, book_id, amount, create_time, status,content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_receive
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+    
+     <select id="findPage" resultMap="BaseResultMap" >
+    SELECT 
+    r.id, r.user_id, r.rol_id,r.book_id, r.amount, r.create_time, r.status,r.content ,b.book,s.stu_name username,t.type_name 
+    FROM t_receive r
+    LEFT JOIN t_book b ON r.book_id = b.id
+    LEFT JOIN t_student s ON s.id = r.user_id
+   LEFT JOIN t_type t ON t.id = b.type_id
+   WHERE r.rol_id =1
+    <if test="book!='' and book!=null">
+	  and	b.book like concat('%',#{book},'%')
+	  </if>
+    UNION 
+     SELECT 
+     r.id, r.user_id, r.rol_id,r. book_id, r.amount, r.create_time, r.status,r.content ,b.book,s.tea_name username,t.type_name
+    FROM t_receive r
+    LEFT JOIN t_book b ON r.book_id = b.id
+    LEFT JOIN t_teacher s ON s.id = r.user_id
+    LEFT JOIN t_type t ON t.id = b.type_id
+      WHERE r.rol_id =2
+       <if test="book!='' and book!=null">
+	  and	b.book like concat('%',#{book},'%')
+	  </if>
+  </select>
+  
+    <select id="findStuPage" resultMap="BaseResultMap" >
+    SELECT 
+    r.id, r.user_id, r.rol_id,r.book_id, r.amount, r.create_time, r.status,r.content ,b.book,s.stu_name username,t.type_name 
+    FROM t_receive r
+    LEFT JOIN t_book b ON r.book_id = b.id
+    LEFT JOIN t_student s ON s.id = r.user_id
+   LEFT JOIN t_type t ON t.id = b.type_id
+   WHERE r.rol_id =1 and r.user_id = #{userId}
+	  <if test="book!='' and book!=null">
+	  and	b.book like concat('%',#{book},'%')
+	  </if>
+  </select>
+  
+      <select id="findTeaPage" resultMap="BaseResultMap" >
+ 
+     SELECT 
+     r.id, r.user_id, r.rol_id,r. book_id, r.amount, r.create_time, r.status,r.content ,b.book,s.tea_name username,t.type_name
+    FROM t_receive r
+    LEFT JOIN t_book b ON r.book_id = b.id
+    LEFT JOIN t_teacher s ON s.id = r.user_id
+    LEFT JOIN t_type t ON t.id = b.type_id
+      WHERE r.rol_id =2 and r.user_id = #{userId}
+        <if test="book!='' and book!=null">
+	  and	b.book like concat('%',#{book},'%')
+	  </if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_receive
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jxxt.entity.TReceive" >
+    insert into t_receive (id, user_id, rol_id, 
+      book_id, amount, create_time, 
+      status)
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{rolId,jdbcType=INTEGER}, 
+      #{bookId,jdbcType=INTEGER}, #{amount,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jxxt.entity.TReceive" >
+    insert into t_receive
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="rolId != null" >
+        rol_id,
+      </if>
+      <if test="bookId != null" >
+        book_id,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+       <if test="content != null" >
+        content,
+      </if>
+      
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+ 
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="rolId != null" >
+        #{rolId,jdbcType=INTEGER},
+      </if>
+      <if test="bookId != null" >
+        #{bookId,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+       <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jxxt.entity.TReceive" >
+    update t_receive
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="rolId != null" >
+        rol_id = #{rolId,jdbcType=INTEGER},
+      </if>
+      <if test="bookId != null" >
+        book_id = #{bookId,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jxxt.entity.TReceive" >
+    update t_receive
+    set user_id = #{userId,jdbcType=INTEGER},
+      rol_id = #{rolId,jdbcType=INTEGER},
+      book_id = #{bookId,jdbcType=INTEGER},
+      amount = #{amount,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
